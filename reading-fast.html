@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Fast — Read 3× More, Remember More</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,300;1,9..144,600;1,9..144,900&family=Karla:ital,wght@0,300;0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:   #faf5ec;
+      --paper-2: #f3ecdd;
+      --ink:     #14110c;
+      --accent:  #ff4d00;
+      --accent-dk: #d63e00;
+      --muted:   #6f6656;
+      --line:    #14110c;
+    }
+
+    ::selection { background: var(--accent); color: var(--paper); }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Karla', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    .wrap { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      border-bottom: 2px solid var(--line);
+      background: var(--paper);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .9rem 1.5rem;
+      max-width: 1060px; margin: 0 auto;
+    }
+    .wordmark {
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-size: 1.25rem;
+      letter-spacing: -.02em;
+      text-decoration: none; color: var(--ink);
+    }
+    .wordmark em { color: var(--accent); font-style: italic; }
+    .topbar-cta {
+      background: var(--ink); color: var(--paper);
+      text-decoration: none;
+      font-weight: 800; font-size: .8rem;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .55rem 1.2rem;
+      border: 2px solid var(--ink);
+      transition: all .18s ease;
+    }
+    .topbar-cta:hover { background: var(--accent); border-color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 5rem 0 4.5rem;
+      border-bottom: 2px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: 'READ READ READ READ READ';
+      position: absolute;
+      bottom: -1.2rem; left: 0; right: 0;
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: 7rem;
+      white-space: nowrap;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(20,17,12,.08);
+      pointer-events: none;
+      user-select: none;
+    }
+    .kicker {
+      display: inline-block;
+      background: var(--accent); color: var(--paper);
+      font-weight: 800; font-size: .75rem;
+      letter-spacing: .18em; text-transform: uppercase;
+      padding: .35rem .9rem;
+      transform: rotate(-1.5deg);
+      margin-bottom: 1.8rem;
+      animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+    }
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 8.5vw, 6.2rem);
+      line-height: .98;
+      letter-spacing: -.03em;
+      max-width: 13ch;
+      margin-bottom: 1.6rem;
+      animation: riseIn .6s .1s ease both;
+    }
+    h1 .strike {
+      position: relative;
+      white-space: nowrap;
+    }
+    h1 .strike::after {
+      content: '';
+      position: absolute;
+      left: -2%; right: -2%; top: 54%;
+      height: .09em;
+      background: var(--accent);
+      transform: rotate(-2deg) scaleX(0);
+      transform-origin: left;
+      animation: strikeThrough .5s .9s ease-out both;
+    }
+    h1 em { font-style: italic; color: var(--accent); }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      max-width: 46ch;
+      color: var(--muted);
+      margin-bottom: 2.4rem;
+      animation: riseIn .6s .25s ease both;
+    }
+    .hero-sub strong { color: var(--ink); }
+
+    .hero-row {
+      display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap;
+      animation: riseIn .6s .4s ease both;
+    }
+    .btn-big {
+      display: inline-block;
+      background: var(--accent); color: var(--paper);
+      font-weight: 800; font-size: .95rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 1.1rem 2.6rem;
+      text-decoration: none;
+      border: 2px solid var(--ink);
+      box-shadow: 5px 5px 0 var(--ink);
+      transition: all .15s ease;
+    }
+    .btn-big:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 3px 3px 0 var(--ink);
+      background: var(--accent-dk);
+    }
+    .btn-big:active { transform: translate(5px, 5px); box-shadow: 0 0 0 var(--ink); }
+    .hero-note { font-size: .9rem; color: var(--muted); font-style: italic; }
+
+    /* ── TICKER ── */
+    .ticker {
+      border-bottom: 2px solid var(--line);
+      background: var(--ink); color: var(--paper);
+      overflow: hidden; padding: .7rem 0;
+    }
+    .ticker-track {
+      display: flex; gap: 3rem; width: max-content;
+      white-space: nowrap;
+      animation: scrollX 20s linear infinite;
+      font-weight: 800; font-size: .78rem;
+      letter-spacing: .16em; text-transform: uppercase;
+    }
+    .ticker-track em { color: var(--accent); font-style: normal; }
+
+    /* ── SECTIONS ── */
+    section { padding: 4.5rem 0; border-bottom: 2px solid var(--line); }
+
+    .sec-label {
+      font-weight: 800; font-size: .75rem;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .sec-label::before {
+      content: ''; width: 34px; height: 2px; background: var(--accent);
+    }
+    h2 {
+      font-family: 'Fraunces', serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      margin-bottom: 1.4rem;
+      max-width: 20ch;
+    }
+    h2 em { font-style: italic; color: var(--accent); }
+
+    /* ── PROBLEM ── */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+    .problem-copy p { margin-bottom: 1.1rem; max-width: 52ch; }
+    .problem-copy strong { background: linear-gradient(transparent 60%, rgba(255,77,0,.25) 60%); }
+
+    .stat-stack { display: flex; flex-direction: column; gap: 1.2rem; }
+    .stat-card {
+      border: 2px solid var(--line);
+      background: var(--paper-2);
+      padding: 1.4rem 1.6rem;
+      box-shadow: 4px 4px 0 var(--line);
+    }
+    .stat-card .num {
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-size: 2.6rem;
+      line-height: 1; color: var(--accent);
+      display: block; margin-bottom: .3rem;
+    }
+    .stat-card .lbl { font-size: .9rem; color: var(--muted); }
+
+    /* ── SOLUTION ── */
+    .solution { background: var(--paper-2); }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.4rem;
+      margin-top: 2.4rem;
+      counter-reset: step;
+    }
+    .step {
+      border: 2px solid var(--line);
+      background: var(--paper);
+      padding: 1.8rem 1.6rem 1.6rem;
+      position: relative;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .step:hover { transform: translateY(-4px); box-shadow: 5px 9px 0 var(--line); }
+    .step::before {
+      counter-increment: step;
+      content: '0' counter(step);
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-style: italic;
+      font-size: 2.2rem;
+      color: var(--accent);
+      display: block;
+      margin-bottom: .8rem;
+    }
+    .step h3 {
+      font-family: 'Fraunces', serif;
+      font-weight: 600; font-size: 1.3rem;
+      margin-bottom: .5rem;
+    }
+    .step p { font-size: .95rem; color: var(--muted); }
+
+    /* ── WHO ── */
+    .who-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      margin-top: 2.2rem;
+      border: 2px solid var(--line);
+    }
+    .who-item {
+      padding: 1.6rem 1.8rem;
+      border-bottom: 2px solid var(--line);
+      display: flex; gap: 1.1rem; align-items: flex-start;
+      background: var(--paper);
+      transition: background .2s ease;
+    }
+    .who-item:hover { background: var(--paper-2); }
+    .who-item:nth-child(odd) { border-right: 2px solid var(--line); }
+    .who-item:nth-last-child(-n+2) { border-bottom: none; }
+    .who-check {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      background: var(--accent); color: var(--paper);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .9rem;
+      border: 2px solid var(--line);
+    }
+    .who-item h3 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.1rem; margin-bottom: .2rem; }
+    .who-item p { font-size: .92rem; color: var(--muted); }
+
+    /* ── PRICING ── */
+    .pricing { background: var(--ink); color: var(--paper); border-bottom: 2px solid var(--ink); }
+    .pricing .sec-label { color: var(--accent); }
+    .pricing h2 { color: var(--paper); }
+    .pricing-sub { color: rgba(250,245,236,.6); max-width: 50ch; margin-bottom: 2.6rem; }
+
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.4rem;
+      align-items: stretch;
+    }
+    .tier {
+      border: 2px solid rgba(250,245,236,.25);
+      padding: 2rem 1.8rem;
+      display: flex; flex-direction: column;
+      background: rgba(250,245,236,.03);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .tier:hover { transform: translateY(-5px); border-color: rgba(250,245,236,.5); }
+    .tier.featured {
+      background: var(--paper); color: var(--ink);
+      border: 2px solid var(--accent);
+      box-shadow: 6px 6px 0 var(--accent);
+      position: relative;
+    }
+    .tier.featured:hover { border-color: var(--accent); }
+    .badge {
+      position: absolute; top: -14px; left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      background: var(--accent); color: var(--paper);
+      font-weight: 800; font-size: .68rem;
+      letter-spacing: .15em; text-transform: uppercase;
+      padding: .3rem .9rem;
+      white-space: nowrap;
+    }
+    .tier-name {
+      font-family: 'Fraunces', serif;
+      font-weight: 600; font-size: 1.2rem;
+      margin-bottom: .2rem;
+    }
+    .tier-tag { font-size: .85rem; opacity: .6; margin-bottom: 1.4rem; }
+    .tier-price {
+      font-family: 'Fraunces', serif;
+      font-weight: 900; font-size: 3rem;
+      line-height: 1; letter-spacing: -.02em;
+      margin-bottom: 1.6rem;
+    }
+    .tier-price sup { font-size: .4em; font-weight: 600; vertical-align: super; }
+    .tier ul { list-style: none; flex: 1; margin-bottom: 1.8rem; }
+    .tier li {
+      font-size: .92rem;
+      padding: .45rem 0 .45rem 1.6rem;
+      position: relative;
+    }
+    .tier li::before {
+      content: '→';
+      position: absolute; left: 0;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .tier li.no { opacity: .35; }
+    .tier li.no::before { content: '✕'; }
+
+    .tier-btn {
+      display: block; text-align: center;
+      text-decoration: none;
+      font-weight: 800; font-size: .82rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: .9rem;
+      border: 2px solid var(--paper);
+      color: var(--paper);
+      transition: all .18s ease;
+    }
+    .tier-btn:hover { background: var(--paper); color: var(--ink); }
+    .tier.featured .tier-btn {
+      background: var(--accent); color: var(--paper);
+      border-color: var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+    .tier.featured .tier-btn:hover {
+      transform: translate(2px,2px);
+      box-shadow: 2px 2px 0 var(--ink);
+      background: var(--accent-dk);
+    }
+
+    /* ── FINAL CTA ── */
+    .final {
+      text-align: center;
+      padding: 6rem 0;
+      border-bottom: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .final::before {
+      content: '📖';
+      position: absolute;
+      font-size: 16rem;
+      opacity: .05;
+      left: 50%; top: 50%;
+      transform: translate(-50%,-50%) rotate(-8deg);
+      pointer-events: none;
+    }
+    .final h2 { margin: 0 auto 1.2rem; }
+    .final p { color: var(--muted); max-width: 44ch; margin: 0 auto 2.4rem; }
+    .final .btn-big { font-size: 1.05rem; padding: 1.3rem 3.2rem; }
+    .guarantee {
+      margin-top: 1.4rem;
+      font-size: .85rem; color: var(--muted); font-style: italic;
+    }
+
+    footer {
+      background: var(--ink); color: rgba(250,245,236,.5);
+      text-align: center;
+      padding: 2rem 1.5rem;
+      font-size: .85rem;
+    }
+    footer em { color: var(--accent); font-style: normal; font-weight: 800; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes riseIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: rotate(-1.5deg) scale(.7); }
+      to   { opacity: 1; transform: rotate(-1.5deg) scale(1); }
+    }
+    @keyframes strikeThrough {
+      to { transform: rotate(-2deg) scaleX(1); }
+    }
+    @keyframes scrollX {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    @media (max-width: 840px) {
+      .problem-grid, .steps, .tiers { grid-template-columns: 1fr; }
+      .who-list { grid-template-columns: 1fr; }
+      .who-item:nth-child(odd) { border-right: none; }
+      .who-item:nth-last-child(-n+2) { border-bottom: 2px solid var(--line); }
+      .who-item:last-child { border-bottom: none; }
+      .tier.featured { order: -1; }
+      .hero::after { font-size: 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="wordmark" href="#">Reading<em>Fast</em></a>
+      <a class="topbar-cta" href="#pricing">Get the Book</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap">
+      <span class="kicker">The E-Book · 187 Pages · Instant Download</span>
+      <h1>Stop <span class="strike">re-reading</span> the same <em>sentence.</em></h1>
+      <p class="hero-sub"><strong>Reading Fast</strong> is a practical system to double or triple your reading speed — without losing comprehension. No gimmicks. Just technique, drills, and a 21-day plan.</p>
+      <div class="hero-row">
+        <a class="btn-big" href="#pricing">Start Reading Faster</a>
+        <span class="hero-note">One-time payment · Yours forever</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>Read <em>3×</em> faster</span><span>·</span>
+      <span>Remember <em>more</em>, not less</span><span>·</span>
+      <span><em>21-day</em> training plan</span><span>·</span>
+      <span>Works on books, reports &amp; screens</span><span>·</span>
+      <span>Read <em>3×</em> faster</span><span>·</span>
+      <span>Remember <em>more</em>, not less</span><span>·</span>
+      <span><em>21-day</em> training plan</span><span>·</span>
+      <span>Works on books, reports &amp; screens</span><span>·</span>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section>
+    <div class="wrap">
+      <p class="sec-label">The Problem</p>
+      <h2>You read like you did in <em>third grade.</em></h2>
+      <div class="problem-grid">
+        <div class="problem-copy">
+          <p>Nobody ever taught you <strong>how</strong> to read — only <strong>what</strong> to read. So you still subvocalize every word, your eyes wander back to lines you already finished, and a 300-page book takes a month you don't have.</p>
+          <p>Meanwhile your reading list grows faster than you can shrink it. Reports pile up. Books gather dust. The knowledge you need sits unread — and every year the gap gets wider.</p>
+          <p>The frustrating part? Your brain can process text far faster than your current habits allow. <strong>The bottleneck isn't intelligence. It's technique.</strong></p>
+        </div>
+        <div class="stat-stack">
+          <div class="stat-card">
+            <span class="num">238</span>
+            <span class="lbl">words/minute — average adult reading speed. Basically unchanged since primary school.</span>
+          </div>
+          <div class="stat-card">
+            <span class="num">30%</span>
+            <span class="lbl">of reading time lost to regression — eyes jumping back to re-read lines.</span>
+          </div>
+          <div class="stat-card">
+            <span class="num">11+</span>
+            <span class="lbl">books on the average "to-read" pile that never get opened.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="solution">
+    <div class="wrap">
+      <p class="sec-label">The Solution</p>
+      <h2>A trainable skill, broken into <em>three moves.</em></h2>
+      <p style="max-width:52ch; color:var(--muted);">Reading Fast rebuilds your reading mechanics from the ground up. Each technique comes with timed drills and a daily practice schedule — 15 minutes a day for 21 days.</p>
+      <div class="steps">
+        <div class="step">
+          <h3>Silence the inner voice</h3>
+          <p>Subvocalization caps you at speaking speed. Learn displacement drills that quiet the voice in your head so your eyes — not your mouth — set the pace.</p>
+        </div>
+        <div class="step">
+          <h3>Widen your eye span</h3>
+          <p>Stop reading word-by-word. Train your eyes to take in chunks of 3–5 words per fixation using pacing drills and peripheral-vision exercises.</p>
+        </div>
+        <div class="step">
+          <h3>Kill regression</h3>
+          <p>Break the habit of re-reading with pointer techniques and comprehension checkpoints — so you move forward once, and retain what you read.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO NEEDS IT -->
+  <section>
+    <div class="wrap">
+      <p class="sec-label">Who It's For</p>
+      <h2>Built for people who read to <em>get ahead.</em></h2>
+      <div class="who-list">
+        <div class="who-item">
+          <span class="who-check">✓</span>
+          <div>
+            <h3>Students</h3>
+            <p>Textbooks, papers, and exam prep — cover twice the material in the same study session.</p>
+          </div>
+        </div>
+        <div class="who-item">
+          <span class="who-check">✓</span>
+          <div>
+            <h3>Busy professionals</h3>
+            <p>Reports, emails, and industry news before your first meeting — not instead of lunch.</p>
+          </div>
+        </div>
+        <div class="who-item">
+          <span class="who-check">✓</span>
+          <div>
+            <h3>Lifelong learners</h3>
+            <p>Finally make progress on that reading pile. Finish a book a week without clearing your calendar.</p>
+          </div>
+        </div>
+        <div class="who-item">
+          <span class="who-check">✓</span>
+          <div>
+            <h3>Founders &amp; managers</h3>
+            <p>Absorb decks, docs, and market research fast enough to act on them while they still matter.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <p class="sec-label">Pricing</p>
+      <h2>Pick your <em>pace.</em></h2>
+      <p class="pricing-sub">One-time payment. Instant download. Free updates for life on every tier.</p>
+      <div class="tiers">
+
+        <div class="tier">
+          <h3 class="tier-name">Starter</h3>
+          <p class="tier-tag">The book, plain and simple</p>
+          <p class="tier-price"><sup>$</sup>19</p>
+          <ul>
+            <li>Reading Fast e-book (PDF + EPUB)</li>
+            <li>21-day training plan</li>
+            <li>Free lifetime updates</li>
+            <li class="no">Drill worksheets &amp; speed tracker</li>
+            <li class="no">Audio companion course</li>
+          </ul>
+          <a class="tier-btn" href="https://buy.stripe.com/cNi3cxfgjeDLcaJewpfrW03">Get Starter</a>
+        </div>
+
+        <div class="tier featured">
+          <span class="badge">Most Popular</span>
+          <h3 class="tier-name">Complete</h3>
+          <p class="tier-tag">Book + practice toolkit</p>
+          <p class="tier-price"><sup>$</sup>39</p>
+          <ul>
+            <li>Everything in Starter</li>
+            <li>Printable drill worksheets</li>
+            <li>Speed &amp; comprehension tracker</li>
+            <li>Bonus: reading-on-screens guide</li>
+            <li class="no">Audio companion course</li>
+          </ul>
+          <a class="tier-btn" href="https://buy.stripe.com/cNi3cxfgjeDLcaJewpfrW03">Get Complete</a>
+        </div>
+
+        <div class="tier">
+          <h3 class="tier-name">Mastery</h3>
+          <p class="tier-tag">Everything, plus audio coaching</p>
+          <p class="tier-price"><sup>$</sup>79</p>
+          <ul>
+            <li>Everything in Complete</li>
+            <li>Audio companion course (3 hrs)</li>
+            <li>Guided drill sessions</li>
+            <li>Advanced skimming module</li>
+            <li>Priority email support</li>
+          </ul>
+          <a class="tier-btn" href="https://buy.stripe.com/cNi3cxfgjeDLcaJewpfrW03">Get Mastery</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final">
+    <div class="wrap">
+      <p class="sec-label" style="justify-content:center">Ready?</p>
+      <h2 style="max-width:16ch; margin-left:auto; margin-right:auto;">Your reading list isn't getting any <em>shorter.</em></h2>
+      <p>Start the 21-day plan today. By this time next month, you'll read in an evening what used to take a week.</p>
+      <a class="btn-big" href="https://buy.stripe.com/cNi3cxfgjeDLcaJewpfrW03">Buy Reading Fast →</a>
+      <p class="guarantee">30-day money-back guarantee. If your speed doesn't improve, email us — full refund, keep the book.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p><em>Reading</em>Fast — © 2026 · Questions? hello@readingfast.example</p>
+  </footer>
+
+</body>
+</html>
