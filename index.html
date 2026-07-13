@@ -1,155 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claude Website Workshop — Pages</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:       #0e0702;
-      --surface:  #1a0e06;
-      --gold:     #c9963e;
-      --gold-lt:  #e0b86a;
-      --gold-dim: #7a5a22;
-      --cream:    #f0e4c8;
-      --text:     #ddd0b0;
-      --muted:    #7a6545;
-      --border:   rgba(201,150,62,.18);
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 18px;
-      line-height: 1.6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 4rem 1.5rem;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: .45;
-    }
-
-    header { text-align: center; margin-bottom: 3rem; max-width: 640px; }
-
-    .eyebrow {
-      font-family: 'Playfair Display SC', serif;
-      font-size: .78rem; letter-spacing: .35em;
-      text-transform: uppercase;
-      color: var(--gold); margin-bottom: 1.2rem;
-      display: flex; align-items: center; justify-content: center; gap: 1rem;
-    }
-    .eyebrow::before, .eyebrow::after {
-      content: ''; flex: 1; max-width: 48px;
-      height: 1px; background: var(--gold-dim);
-    }
-
-    h1 {
-      font-family: 'Playfair Display SC', serif;
-      font-size: clamp(2.4rem, 6vw, 4rem);
-      font-weight: 400;
-      color: var(--cream);
-      line-height: 1.1;
-      margin-bottom: 1rem;
-    }
-    h1 em { color: var(--gold-lt); font-style: italic; }
-
-    .subtitle {
-      font-style: italic; font-weight: 300;
-      color: var(--muted);
-    }
-
-    .pages {
-      list-style: none;
-      width: 100%;
-      max-width: 640px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-
-    .pages a {
-      display: flex; align-items: center; gap: 1.4rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.4rem 1.8rem;
-      text-decoration: none;
-      color: var(--text);
-      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
-    }
-    .pages a:hover {
-      transform: translateY(-3px);
-      border-color: var(--gold-dim);
-      box-shadow: 0 16px 40px rgba(0,0,0,.5);
-    }
-
-    .page-emoji { font-size: 2.4rem; flex-shrink: 0; }
-
-    .page-name {
-      font-family: 'Playfair Display SC', serif;
-      font-size: 1.2rem; color: var(--cream);
-      margin-bottom: .15rem;
-    }
-    .page-desc {
-      font-size: .92rem; font-style: italic;
-      color: var(--muted); line-height: 1.4;
-    }
-
-    .page-arrow {
-      margin-left: auto;
-      color: var(--gold);
-      font-size: 1.3rem;
-      transition: transform .25s ease;
-    }
-    .pages a:hover .page-arrow { transform: translateX(5px); }
-
-    footer {
-      margin-top: auto;
-      padding-top: 3rem;
-      text-align: center;
-      color: var(--muted);
-      font-size: .85rem;
-      font-style: italic;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Index</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-width: 640px;
+    margin: 4rem auto;
+    padding: 0 1.5rem;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  ul { list-style: none; padding: 0; }
+  li { margin: 0.5rem 0; }
+  a {
+    display: block;
+    padding: 0.9rem 1.1rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #1a1a1a;
+    transition: border-color 0.15s ease;
+  }
+  a:hover { border-color: #999; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #111; color: #eee; }
+    a { background: #1b1b1b; border-color: #333; color: #eee; }
+    a:hover { border-color: #666; }
+  }
+</style>
 </head>
 <body>
-
-  <header>
-    <p class="eyebrow">Claude Code Workshop</p>
-    <h1>Website <em>Gallery</em></h1>
-    <p class="subtitle">Pages built during the workshop — pick one to explore.</p>
-  </header>
-
-  <ul class="pages">
-    <li>
-      <a href="bakery.html">
-        <span class="page-emoji">🥐</span>
-        <span>
-          <span class="page-name">La Farine — Artisan Bakery &amp; Café</span><br>
-          <span class="page-desc">Dark, moody bakery storefront with product grid, category filters, and a working cart drawer.</span>
-        </span>
-        <span class="page-arrow">→</span>
-      </a>
-    </li>
+  <h1>Pages</h1>
+  <ul>
+      <li><a href="bakery.html">La Farine — Artisan Bakery &amp; Café</a></li>
   </ul>
-
-  <footer>
-    <p>Claude 101 Workshop · Built with Claude Code</p>
-  </footer>
-
 </body>
 </html>
